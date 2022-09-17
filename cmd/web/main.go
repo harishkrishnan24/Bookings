@@ -1,8 +1,11 @@
 package main
 
 import (
+	"bookings/pkg/config"
 	"bookings/pkg/handlers"
+	"bookings/pkg/render"
 	"fmt"
+	"log"
 	"net/http"
 )
 
@@ -10,9 +13,20 @@ const portNumber = ":8081"
 
 // main is the main application function
 func main() {
+	var app config.AppConfig
+	tc, err := render.CreateTemplateCache()
+	if err != nil {
+		log.Fatal("cannot create template cache")
+	}
 
-	http.HandleFunc("/", handlers.Home)
-	http.HandleFunc("/about", handlers.About)
+	app.TemplateCache = tc
+	app.UseCache = false
+	repo := handlers.NewRepo(&app)
+	handlers.NewHandlers(repo)
+	render.NewTemplates(&app)
+
+	http.HandleFunc("/", handlers.Repo.Home)
+	http.HandleFunc("/about", handlers.Repo.About)
 
 	fmt.Println(fmt.Sprintf("Starting application on port %s", portNumber))
 	http.ListenAndServe(portNumber, nil)
