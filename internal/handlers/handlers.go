@@ -1,9 +1,9 @@
 package handlers
 
 import (
-	"bookings/pkg/config"
-	"bookings/pkg/models"
-	"bookings/pkg/render"
+	"bookings/internal/config"
+	"bookings/internal/models"
+	"bookings/internal/render"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -92,7 +92,6 @@ func (m *Repository) AvailabilityJSON(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	log.Println(string(out))
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(out)
 }
